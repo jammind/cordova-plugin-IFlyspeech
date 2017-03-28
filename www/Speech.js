@@ -84,17 +84,24 @@ Speech.prototype = {
         exec(callback, callback, 'Speech', 'login', []);
 
         function parseResults( e ) {
-            var data = JSON.parse( e.results );
-            if(data.sn == 1) speech.msg = "";
-            var ws = data.ws;
-            for( var i=0; i<ws.length; i++ ) {
-                var word = ws[i].cw[0].w;
-                speech.msg += word;
-            }
-            if(data.ls == true) {
-                console.log( speech.msg );
+//            console.log('parseResults', e);
+            if (!e.results.length) { // Heard nothing
                 if(typeof speech.onspeakcallback === 'function') {
-                    speech.onspeakcallback( speech.msg );
+                    speech.onspeakcallback('');
+                }
+            } else { // Heard something
+                var data = JSON.parse( e.results );
+                if(data.sn == 1) speech.msg = "";
+                var ws = data.ws;
+                for( var i=0; i<ws.length; i++ ) {
+                    var word = ws[i].cw[0].w;
+                    speech.msg += word;
+                }
+                if(data.ls == true) {
+    //                console.log( speech.msg );
+                    if(typeof speech.onspeakcallback === 'function') {
+                        speech.onspeakcallback( speech.msg );
+                    }
                 }
             }
         }
@@ -102,10 +109,11 @@ Speech.prototype = {
 
     },
 
-
-   startListen: function(func,fail,isShow,isShowPunc) {
-        this.onspeakcallback = func;
-               exec(null, null, 'Speech', 'startListening', [{language:'zh_cn', accent:'mandarin'},isShow,isShowPunc]);
+    // Method to start dictation
+    // Dictation ends after a short break after speech, or about 8 seconds of silence
+    startListen: function(onSuccess, onFail, showUI, showPunc) {
+        this.onspeakcallback = onSuccess;
+               exec(null, null, 'Speech', 'startListening', [{language:'zh_cn', accent:'mandarin'}, showUI, showPunc]);
     },
 
     stopListen: function() {
