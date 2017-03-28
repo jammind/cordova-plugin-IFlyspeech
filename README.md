@@ -7,4 +7,8 @@
 
 ## Installation
 
-cordova plugin add https://github.com/Edc-zhang/cordova-plugin-IFlyspeech
+cordova plugin add https://github.com/jammind/cordova-plugin-iflyspeech
+
+## Removal
+
+cordova plugin rm cordova-plugin-xunfeiListenSpeakin
