@@ -241,12 +241,29 @@
 +(NSString*)PLAYER_INIT;
 
 /**
+ *  是否播放器结束后发送deactive系统通知
+ *  SDK内部播放器结束后可通过此开关发送deactive系统通知，使其他被中断的音频应用解除中断
+ *  0:不发送，非0或者参数为空:发送，默认发送
+ *  @return 是否播放器结束后发送deactive系统通知 参数key
+ */
++(NSString*)PLAYER_DEACTIVE;
+
+/**
  *  是否初始化录音器
  *  SDK内部录音器采用音频队列实现，有部分外部需求需要自定义音频队列，可以通过此开关控制
  *  0:不初始化，非0或者参数为空:初始化，默认初始化
  *  @return 是否初始化录音器 参数key
  */
 +(NSString*)RECORDER_INIT;
+
+/**
+ *  是否录音器结束后发送deactive系统通知
+ *  SDK内部录音器结束后可通过此开关发送deactive系统通知，使其他被中断的音频应用解除中断
+ *  0:不发送，非0或者参数为空:发送，默认发送
+ *  @return 是否录音器结束后发送deactive系统通知 参数key
+ */
++(NSString*)RECORDER_DEACTIVE;
+
 
 #pragma mark -  合成相关设置key
 /*!

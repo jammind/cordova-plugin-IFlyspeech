@@ -57,12 +57,13 @@
 
 /**
  *  恢复播放回调
+ *  注意：此回调方法SDK内部不执行，播放恢复全部在onSpeakBegin中执行
  */
 - (void) onSpeakResumed;
 
 /**
  *  正在取消回调
- * 当调用`cancel`之后会回调此函数
+ * 注意：此回调方法SDK内部不执行
  */
 - (void) onSpeakCancel;
 
