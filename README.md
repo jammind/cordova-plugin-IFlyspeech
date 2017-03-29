@@ -29,4 +29,4 @@ cordova plugin rm cordova-plugin-xunfeiListenSpeakin
 Always create your own App ID at http://www.xfyun.cn/ and replace the original App ID @ Line 20 in speech.m
 
     Always create your own App ID at http://www.xfyun.cn/ and replace the original App ID
-    #define SPEECH_APP_ID @"58a3e316" // BeanLab App ID
+    #define SPEECH_APP_ID @"xxxxxxxx" // BeanLab App ID
