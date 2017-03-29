@@ -97,7 +97,7 @@ Speech.prototype = {
                 }
                 if(data.ls == true) {
     //                console.log( speech.msg );
-                    if(typeof speech.onResult === 'function') {
+                    if(typeof speech.onResult === 'function' && speech.msg.length) {
                         speech.onResult(speech.msg);
                     }
                 }
