@@ -147,7 +147,8 @@ Speech.prototype = {
     },
 
     stopListen: function() {
-        clearTimeout(speech.timeoutID);
+        this.isListening = false;
+        clearTimeout(this.timeoutID);
         exec(null, null, 'Speech', 'stopListening', []);
     },
 
