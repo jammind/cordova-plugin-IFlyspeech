@@ -84,12 +84,10 @@ Speech.prototype = {
         exec(callback, callback, 'Speech', 'login', []);
 
         function parseResults( e ) {
+            
 //            console.log('parseResults', e);
-            if (!e.results.length) { // Heard nothing
-                if(typeof speech.onspeakcallback === 'function') {
-                    speech.onspeakcallback('');
-                }
-            } else { // Heard something
+            
+            if (e.results.length) { // Heard something
                 var data = JSON.parse( e.results );
                 if(data.sn == 1) speech.msg = "";
                 var ws = data.ws;
@@ -99,21 +97,53 @@ Speech.prototype = {
                 }
                 if(data.ls == true) {
     //                console.log( speech.msg );
-                    if(typeof speech.onspeakcallback === 'function') {
-                        speech.onspeakcallback( speech.msg );
+                    if(typeof speech.onResult === 'function') {
+                        speech.onResult(speech.msg);
                     }
                 }
             }
+            
+            // Continuous dictation
+            if (speech.isListening && speech.continuous) app.timeoutID = setTimeout(function() {
+                speech.startListen(speech.onResult, {
+                    onError: speech.onError,
+                    onVolume: speech.onVolume,
+                    continuous: speech.continuous,
+                    showUI: speech.showUI,
+                    showPunctuation: speech.showPunctuation
+                });
+            }, 50);
+            
         }
-        this.addEventListener('SpeechResults', parseResults );
-
+        
+        function parseError( e ) {
+            console.error('parseError', e);
+        }
+        
+        function parseVolume( e ) {
+//            console.log('parseVolume', e);
+            if(typeof speech.onVolume === 'function') {
+                speech.onVolume( e.volume );
+            }
+        }
+        
+        this.addEventListener('SpeechResults', parseResults);
+        this.addEventListener('SpeechError', parseError);
+        this.addEventListener('VolumeChanged', parseVolume);
+        
     },
 
     // Method to start dictation
     // Dictation ends after a short break after speech, or about 8 seconds of silence
-    startListen: function(onSuccess, onFail, showUI, showPunc) {
-        this.onspeakcallback = onSuccess;
-               exec(null, null, 'Speech', 'startListening', [{language:'zh_cn', accent:'mandarin'}, showUI, showPunc]);
+    startListen: function(onResult, options) {
+        this.isListening = true;
+        this.onResult = onResult; // (function) Callback on speech recognition result
+        this.onError = options.onError; // (function) Callback on error
+        this.onVolume = options.onVolume; // (function) Callback on input volume change
+        this.continuous = options.continuous; // (boolean) If automatically start listening after previous recognition
+        this.showUI = options.showUI; // Show iFly buil-in UI overlay
+        this.showPunctuation = options.showPunctuation; // Recognize punctuation in speech
+        exec(null, null, 'Speech', 'startListening', [{language:'zh_cn', accent:'mandarin'}, options.showUI, options.showPunctuation]);
     },
 
     stopListen: function() {
