@@ -104,7 +104,7 @@ Speech.prototype = {
             }
             
             // Continuous dictation
-            if (speech.isListening && speech.continuous) app.timeoutID = setTimeout(function() {
+            if (speech.isListening && speech.continuous) speech.timeoutID = setTimeout(function() {
                 speech.startListen(speech.onResult, {
                     onError: speech.onError,
                     onVolume: speech.onVolume,
@@ -147,6 +147,7 @@ Speech.prototype = {
     },
 
     stopListen: function() {
+        clearTimeout(speech.timeoutID);
         exec(null, null, 'Speech', 'stopListening', []);
     },
 
